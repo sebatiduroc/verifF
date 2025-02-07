@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test JavaScript</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #888888;
+        }
+
+        #containerF {
+            display: flex;
+            flex-direction: column;
+            justify-content: top;
+            align-items: top;
+            height: 100vh;
+            text-align: center;
+        }
+
+        #testbuttonF {
+            background-color: green;
+            color: white;
+            font-size: 20px;
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #testbuttonF:hover {
+            background-color: darkgreen;
+        }
+
+        #messageF {
+            margin-top: 20px;
+            font-size: 18px;
+            color: black;
+            font-weight: bold;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="containerF">
+        <button id="testbuttonF">Test</button>
+        <div id="messageF"></div>
+    </div>
+    <script>
+        let userInput = [];
+        const bipSound = new Audio("https://lasonotheque.org/UPLOAD/wav/2235.wav");
+        const startSound = new Audio("https://lasonotheque.org/UPLOAD/wav/1111.wav");
+        
+        document.addEventListener("keydown", function (event) {
+            let key = event.key.toUpperCase();
+            if (/^[A-Z]$/.test(key) && !userInput.includes(key)) {
+                userInput.push(key);
+                document.getElementById("testbuttonF").innerText = userInput.join('');
+                bipSound.play();
+            }
+
+            if (userInput.length === 3) {
+                checkAnswer();
+                userInput = [];
+                setTimeout(function () {
+                    startSound.play().catch(error => console.log("Erreur de lecture audio :", error));
+                }, 200);
+            }
+        });
+
+        function checkAnswer() {
+            const correct = ["X", "V", "Z"];
+            let correctLetters = userInput.filter(letter => correct.includes(letter)).length;
+            let messageF = "";
+
+            if (userInput.join('') === "XVZ") {
+                messageF = "🎉 Parfait !, code 09";
+            } else if (correctLetters === 3) {
+                messageF = "✅ Cartes:OK, ordre:KO.";
+            } else {
+                messageF = `❌ ${correctLetters} carte(s) OK.`;
+            }
+
+            document.getElementById("messageF").innerText = messageF;
+        }
+
+        document.getElementById("testbuttonF").addEventListener("click", function () {
+            userInput = [];
+            document.getElementById("messageF").innerText = "";
+            document.getElementById("testbuttonF").innerText = "Test";
+            setTimeout(function () {
+                startSound.play();
+            }, 200);
+        });
+    </script>
+</body>
+</html>
